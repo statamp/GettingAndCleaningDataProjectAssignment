@@ -1,4 +1,8 @@
-README for Project Assignment -----------------------------
+Getting and Cleaning Data (Coursera course in data science track)
+-----------------------------------------------------------------
+
+This repository is part of Coursera course Getting and Cleaning Data.
+It fulfils the assignment for week 3.
 
 Use the accompanying script run_analysis.R to generate two files,
 UCIHARActivityTidy.csv and UCIHARSubjectTidy.csv. These contain a subset of the
