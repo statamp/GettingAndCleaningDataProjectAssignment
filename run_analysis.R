@@ -64,10 +64,12 @@ names(X) <- descriptive.names
 write.csv(X, file="UCIHARSubset.csv", row.names=FALSE)
 
 # output average for each activity and each subject
+# get the mean
 f <- function(x) {
     colMeans(x[, -match("Activity", names(x))])
 }
 
+# group by Subject
 s <- split(X, subject)
 li <- lapply(s, f)
 r1 <- do.call("rbind", li)
@@ -76,6 +78,7 @@ names(r1) <- descriptive.names[-match("Activity", descriptive.names)]
 r1 <- cbind(Subject=row.names(r1), r1)
 write.csv(r1, file="UCIHARSubjectTidy.csv", row.names=FALSE)
 
+# group by Activity
 s <- split(X, X$Activity)
 li <- lapply(s, f)
 r2 <-do.call("rbind", li)
