@@ -36,12 +36,10 @@ y <- rbind(y_test, y_train)
 # extract mean measurements
 extract_cols <- grepl("mean[()]{2}", features[, 2]) | 
     grepl("std[()]{2}", features[, 2])
-subject <- subject[extract_cols, ]
-X <- X[extract_cols, ]
-y <- y[extract_cols, ]
+X <- X[, extract_cols]
 
 # add descriptive activity names
-X <- cbind(X, activity=activity_labels[y,2])
+X <- cbind(X, Activity=activity_labels[y[, 1], 2])
 # test round trip
 #w = function(x) which(x == activity_labels[,2])
 #r = sapply(X3$activity, w)
@@ -59,22 +57,31 @@ f4 <- function(x) {
 }
 raw.names <- make.names(features[, 2])
 descriptive.names <- f4(f3(f2(f1(raw.names))))
-descriptive.names <- descriptive.names[extract_cols]
+descriptive.names <- c(descriptive.names[extract_cols], "Activity")
+
+# output data
+names(X) <- descriptive.names
+write.csv(X, file="UCIHARSubset.csv", row.names=FALSE)
 
 # output average for each activity and each subject
 f <- function(x) {
-    colMeans(x[, -match("activity", names(x))])
+    colMeans(x[, -match("Activity", names(x))])
 }
+
 s <- split(X, subject)
 li <- lapply(s, f)
 r1 <- do.call("rbind", li)
-names(r1) <- descriptive.names
-write.table(r1, file="UCIHARSubjectTidy.csv", row.names=FALSE)
+names(r1) <- descriptive.names[-match("Activity", descriptive.names)]
+# write row.names as extra column so i can add a variable name
+r1 <- cbind(Subject=row.names(r1), r1)
+write.csv(r1, file="UCIHARSubjectTidy.csv", row.names=FALSE)
 
-s <- split(X, X$activity)
+s <- split(X, X$Activity)
 li <- lapply(s, f)
 r2 <-do.call("rbind", li)
-names(r2) <- descriptive.names
-write.table(r2, file="UCIHARActivityTidy.csv", row.names=FALSE)
+names(r2) <- descriptive.names[-match("Activity", names(x))]
+# write row.names as extra column so i can add a variable name
+r2 <- cbind(Activity=row.names(r2), r2)
+write.csv(r2, file="UCIHARActivityTidy.csv", row.names=FALSE)
 
 
