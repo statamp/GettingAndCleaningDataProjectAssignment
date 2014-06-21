@@ -82,7 +82,7 @@ write.csv(r1, file="UCIHARSubjectTidy.csv", row.names=FALSE)
 s <- split(X, X$Activity)
 li <- lapply(s, f)
 r2 <-do.call("rbind", li)
-names(r2) <- descriptive.names[-match("Activity", names(x))]
+names(r2) <- descriptive.names[-match("Activity", descriptive.names)]
 # write row.names as extra column so i can add a variable name
 r2 <- cbind(Activity=row.names(r2), r2)
 write.csv(r2, file="UCIHARActivityTidy.csv", row.names=FALSE)
